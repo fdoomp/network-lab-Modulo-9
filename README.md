@@ -15,7 +15,7 @@ sudo systemctl status webmin
 
 ip add
 
-------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Laboratorios del modulo IX Practica 2
 
@@ -81,4 +81,96 @@ terraform show | grep ipv4_address
 
 ssh root@la-ip-publica
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Laboratorios del modulo IX Practica 3
+
+sudo apt install ansible -y
+
+sudo mkdir -p /etc/ansible/
+
+sudo nano ansible.cfg
+
+[defaults]
+inventory = /etc/ansible/hosts
+private_key_file = /home/ansible/.ssh/id_rsa
+host_key_checking = False
+ask_become_pass = True
+
+[ssh_connection]
+ssh_args = -o ForwardAgent=yes -o ControlMaster=auto -o ControlPersist=60s
+
+
+
+sudo nano /etc/ansible/hosts
+
+[win]
+ip de maquina windows vm 
+
+[win:vars]
+ansible_user=ansible
+ansible_password=1234
+ansible_port=5985
+ansible_connection=winrm
+ansible_winrm_transport=basic
+ansible_winrm_server_cert_validation=ignore
+
+[linux]
+la ip de la maquina ocean 
+
+[linux:vars]
+ansible_user=ansible
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+ansible_become_password=1234
+
+
+ssh-keygen -t rsa -b 4096
+
+cat ~/.ssh/id_rsa.pub
+
+adduser ansible
+
+usermod -aG sudo ansible 
+
+chsh -s /bin/bash ansible 
+
+sudo mkdir -p /home/ansible/.ssh
+
+sudo chmod 700 /home/ansible/.ssh
+
+sudo nano /home/ansible/.ssh/authorized_keys
+
+sudo chmod 600 /home/ansible/.ssh/authorized_keys
+
+sudo chown -R ansible:ansible /home/ansible.ssh
+
+
+ansible Linux -m ping -u ansible 
+
+
+Set-ExecutionPolicy RemoteSigned -Force
+
+Enable-PSRemoting -Force
+
+Set-Item WSMan:\localhost\Service\AllowUnencrypted -Value $true
+Set-Item WSMan:\localhost\Service\AuthiBasic -Value $true
+Set-Item WSMan:\localhost\Client\TrustedHosts -Value '*' -Force
+
+netsh advfirewall firewall add rule name="WinRM HTTP" dir=in action=allow protocol=TCP localport=5985
+
+netsh advfirewall firewall set rule group="Administración remota de Windows" new enable=yes
+
+Restart-Service WinRM
+
+$Password = ConvertTo-SecureString "1234" -AsPlainText -Force
+
+New-LocalUser -Name "ansible" -Password $Password -FullName "Ansible User" -Description "Usuario para Ansible"
+
+Add-LocalGroupMember -Group "Administrators" -Member "ansible"
+
+winrm enumerate winrm/config/listener
+
+Test-NetConnection -ComputerName localhost -Port 5985
+
+ansible win -m win_ping 
 
