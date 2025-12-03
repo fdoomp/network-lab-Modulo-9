@@ -196,5 +196,58 @@ ansible 134.209.114.221 -i /etc/ansible/hosts -m reboot -become
 
 Laboratorios del modulo IX Practica 5
 
+sudo nano install_notepad.yml 
+
+
+---
+- name: Instalar Notepad++ en Windows
+  hosts: win
+  gather_facts: no
+  tasks:
+    - name: Asegurar que C:\Temp existe
+      win_file:
+        path: C:\Temp
+        state: directory
+
+    - name: Descargar instalador de Notepad++
+      win_get_url:
+        url: https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.6.4/npp.8.6.4.Installer.x64.exe
+        dest: C:\Temp\npp_installer.exe
+
+    - name: Instalar Notepad++
+      win_package:
+        path: C:\Temp\npp_installer.exe
+        arguments: /S
+        product_id: Notepad++
+        state: present
+
+
+
+ansible-playbook install_notepad.yml
+
+
+
+sudo nano install_nginx.yml
+
+---
+- name: Instalar y arrancar NGINX en linux
+  hosts: linux
+  become: yes
+  tasks:
+    - name: Instalar NGINX
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Habilitar e iniciar el servicio NGINX
+      systemd:
+        name: nginx
+        enabled: yes
+        state: started
+
+
+
+ansible-playbook install_nginx.yml
 
 
