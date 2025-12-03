@@ -174,3 +174,28 @@ Test-NetConnection -ComputerName localhost -Port 5985
 
 ansible win -m win_ping 
 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Laboratorios del modulo IX Practica 4
+
+ansible win -i /etc/ansible/hosts -m win_shell -a 'echo "Archivo de prueba ad-hoc" > C:/Users/andry/Desktop/pruebadhoc.txt'
+
+
+ansible win -i /etc/ansible/hosts -m win_shell -a 'Move-Item -Path "C:/Users/andry/Desktop/pruebadhoc.txt" -Destination "C:/Users/andry/Documents/"'
+
+
+
+ansible win -i /etc/ansible/hosts -m win_shell -a 'Test-Path "C:/Users/andry/Documents/pruebadhoc.txt"'
+
+ping 134.209.114.221
+
+ansible 134.209.114.221 -i /etc/ansible/hosts -m reboot -become 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Laboratorios del modulo IX Practica 5
+
+
+
+
